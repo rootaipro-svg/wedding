@@ -1,0 +1,113 @@
+{
+  "name": "Wedding Invitations - Send via WhatsApp Cloud API",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Replace this demo data with Google Sheets / Supabase rows after testing.\nreturn [\n  { json: { id: 1, guest_name: 'أحمد سالم عبدالله', title: 'الأخ', phone: '777111111' } }\n];"
+      },
+      "id": "demo",
+      "name": "Demo Guest - Replace Later",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const baseUrl = $env.PUBLIC_BASE_URL || 'https://your-project.vercel.app';\nconst apiKey = $env.INVITATION_API_KEY || '';\nfunction normalizePhone(input) {\n  let value = String(input || '').trim().replace(/[^\\d]/g, '');\n  if (value.startsWith('00')) value = value.slice(2);\n  if (value.startsWith('0')) value = value.slice(1);\n  if (value.length === 9 && value.startsWith('7')) value = `967${value}`;\n  return value;\n}\nreturn items.map(item => {\n  const j = item.json;\n  const phone = normalizePhone(j.phone);\n  const displayName = `${j.title || ''} / ${j.guest_name}`.replace(/^ \\/ /, '');\n  const params = new URLSearchParams({\n    name: j.guest_name,\n    title: j.title || '',\n    phone,\n    groomName: 'عبدالله بن محمد',\n    familyName: 'عائلتا المثال',\n    eventDate: 'مساء الجمعة 15 / 8 / 2026',\n    eventTime: '8:30 مساءً',\n    venue: 'قاعة المثال للاحتفالات'\n  });\n  if (apiKey) params.set('apiKey', apiKey);\n  return { json: { ...j, phone_e164: phone, display_name: displayName, image_url: `${baseUrl}/api/invitation-image?${params.toString()}` } };\n});"
+      },
+      "id": "build",
+      "name": "Build Payload Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/{{$env.WHATSAPP_API_VERSION || 'v22.0'}}/{{$env.WHATSAPP_PHONE_NUMBER_ID}}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$env.WHATSAPP_ACCESS_TOKEN}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{$json.phone_e164}}\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"{{$env.WHATSAPP_TEMPLATE_NAME || 'wedding_invitation'}}\",\n    \"language\": { \"code\": \"{{$env.WHATSAPP_TEMPLATE_LANGUAGE || 'ar'}}\" },\n    \"components\": [\n      {\n        \"type\": \"header\",\n        \"parameters\": [\n          { \"type\": \"image\", \"image\": { \"link\": \"{{$json.image_url}}\" } }\n        ]\n      },\n      {\n        \"type\": \"body\",\n        \"parameters\": [\n          { \"type\": \"text\", \"text\": \"{{$json.display_name}}\" }\n        ]\n      }\n    ]\n  }\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "wa",
+      "name": "Send WhatsApp Template",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        760,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Demo Guest - Replace Later",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Demo Guest - Replace Later": {
+      "main": [
+        [
+          {
+            "node": "Build Payload Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Payload Data": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

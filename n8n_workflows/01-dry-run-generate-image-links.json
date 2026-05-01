@@ -1,0 +1,69 @@
+{
+  "name": "Wedding Invitations - Dry Run Generate Links",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { json: { id: 1, guest_name: 'أحمد سالم عبدالله', title: 'الأخ', phone: '777111111' } },\n  { json: { id: 2, guest_name: 'محمد علي حسن', title: 'الأستاذ', phone: '777222222' } },\n  { json: { id: 3, guest_name: 'عبدالله صالح الكثيري', title: 'الشيخ', phone: '777333333' } }\n];"
+      },
+      "id": "demo",
+      "name": "Demo Guests",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const baseUrl = $env.PUBLIC_BASE_URL || 'https://your-project.vercel.app';\nconst apiKey = $env.INVITATION_API_KEY || '';\nfunction normalizePhone(input) {\n  let value = String(input || '').trim().replace(/[^\\d]/g, '');\n  if (value.startsWith('00')) value = value.slice(2);\n  if (value.startsWith('0')) value = value.slice(1);\n  if (value.length === 9 && value.startsWith('7')) value = `967${value}`;\n  return value;\n}\nreturn items.map(item => {\n  const j = item.json;\n  const phone = normalizePhone(j.phone);\n  const params = new URLSearchParams({\n    name: j.guest_name,\n    title: j.title || '',\n    phone,\n    groomName: 'عبدالله بن محمد',\n    familyName: 'عائلتا المثال',\n    eventDate: 'مساء الجمعة 15 / 8 / 2026',\n    eventTime: '8:30 مساءً',\n    venue: 'قاعة المثال للاحتفالات'\n  });\n  if (apiKey) params.set('apiKey', apiKey);\n  const imageUrl = `${baseUrl}/api/invitation-image?${params.toString()}`;\n  const displayName = `${j.title || ''} / ${j.guest_name}`.replace(/^ \\/ /, '');\n  const message = `السلام عليكم ورحمة الله وبركاته\\nيشرفنا دعوتكم لحضور حفل الزواج.\\nالمدعو الكريم: ${displayName}\\nبطاقة الدعوة: ${imageUrl}\\nحضوركم يسعدنا ويشرفنا.`;\n  return { json: { ...j, phone_e164: phone, display_name: displayName, image_url: imageUrl, whatsapp_click_link: `https://wa.me/${phone}?text=${encodeURIComponent(message)}` } };\n});"
+      },
+      "id": "build",
+      "name": "Build Image + WhatsApp Links",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Demo Guests",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Demo Guests": {
+      "main": [
+        [
+          {
+            "node": "Build Image + WhatsApp Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

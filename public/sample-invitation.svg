@@ -1,0 +1,21 @@
+<svg width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF8EA"/><stop offset="1" stop-color="#EFE0C1"/></linearGradient>
+  </defs>
+  <rect width="1080" height="1350" fill="url(#bg)"/>
+  <rect x="58" y="58" width="964" height="1234" rx="42" fill="none" stroke="#B78A45" stroke-width="5"/>
+  <rect x="88" y="88" width="904" height="1174" rx="34" fill="rgba(255,255,255,0.50)" stroke="#D6B46D" stroke-width="2"/>
+  <text x="540" y="165" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="34" fill="#6E4E23">بسم الله الرحمن الرحيم</text>
+  <text x="540" y="265" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="74" font-weight="700" fill="#7B5628">دعوة زواج</text>
+  <line x1="325" y1="310" x2="755" y2="310" stroke="#B78A45" stroke-width="3"/>
+  <text x="540" y="395" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="34" fill="#4B3A2A">يتشرف عائلتا المثال بدعوتكم لحضور حفل زواج</text>
+  <text x="540" y="480" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="58" font-weight="700" fill="#8B2E2E">عبدالله بن محمد</text>
+  <text x="540" y="585" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="31" fill="#5E4A35">الدعوة موجهة إلى</text>
+  <rect x="150" y="625" width="780" height="178" rx="28" fill="#FFFFFF" fill-opacity="0.82" stroke="#CDA45F" stroke-width="3"/>
+  <text x="540" y="725" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="48" font-weight="700" fill="#6F1D1B">الأخ / أحمد سالم عبدالله</text>
+  <text x="540" y="890" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="34" fill="#4B3A2A">وذلك بمشيئة الله تعالى</text>
+  <text x="540" y="970" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="34" fill="#4B3A2A">مساء الجمعة 15 / 8 / 2026</text>
+  <text x="540" y="1025" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="34" fill="#4B3A2A">الوقت: 8:30 مساءً</text>
+  <text x="540" y="1080" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="34" fill="#4B3A2A">المكان: قاعة المثال للاحتفالات</text>
+  <text x="540" y="1235" text-anchor="middle" direction="rtl" unicode-bidi="plaintext" font-family="Noto Sans Arabic" font-size="25" fill="#7B5628">حضوركم يشرفنا ويسعدنا</text>
+</svg>
