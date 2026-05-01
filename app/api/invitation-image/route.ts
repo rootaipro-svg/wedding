@@ -40,8 +40,9 @@ export async function GET(req: NextRequest) {
   const normalizedPhone = phone ? normalizePhone(phone) : 'sample';
   const filename = `wedding-invitation-${normalizedPhone}.png`;
 
-  return new Response(png, {
-    status: 200,
+return new Response(new Uint8Array(png), {
+  
+  status: 200,
     headers: {
       'Content-Type': 'image/png',
       'Content-Disposition': `inline; filename="${filename}"`,
