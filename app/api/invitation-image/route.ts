@@ -67,7 +67,6 @@ export async function GET(req: NextRequest) {
     headers: {
       'Content-Type': 'image/png',
       'Content-Disposition': `inline; filename="${filename}"`,
-      'Cache-Control': 'public, max-age=31536000, immutable'
-    }
+'Cache-Control': 'no-store'    }
   });
 }
