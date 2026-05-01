@@ -46,9 +46,15 @@ export async function GET(req: NextRequest) {
   const displayName = buildDisplayName(name, title);
   const guestLines = wrapArabicText(displayName, 26);
 
-  const fontData = await fetch(
-    new URL('../../../public/fonts/NotoNaskhArabic-Regular.ttf', import.meta.url)
-  ).then((res) => res.arrayBuffer());
+  // تحميل الخط من مجلد public بطريقة مستقرة
+  const fontUrl = new URL('/fonts/NotoNaskhArabic-Regular.ttf', req.nextUrl.origin);
+  const fontRes = await fetch(fontUrl);
+
+  if (!fontRes.ok) {
+    return new Response(`Font not found: ${fontUrl.toString()}`, { status: 500 });
+  }
+
+  const fontData = await fontRes.arrayBuffer();
 
   const width = 1080;
   const height = 1350;
@@ -68,7 +74,6 @@ export async function GET(req: NextRequest) {
       },
     },
 
-    // glow
     h('div', {
       style: {
         position: 'absolute',
@@ -80,7 +85,6 @@ export async function GET(req: NextRequest) {
       },
     }),
 
-    // outer border
     h('div', {
       style: {
         position: 'absolute',
@@ -93,7 +97,6 @@ export async function GET(req: NextRequest) {
       },
     }),
 
-    // inner border
     h('div', {
       style: {
         position: 'absolute',
@@ -107,7 +110,6 @@ export async function GET(req: NextRequest) {
       },
     }),
 
-    // bismillah
     h(
       'div',
       {
@@ -123,7 +125,6 @@ export async function GET(req: NextRequest) {
       'بسم الله الرحمن الرحيم'
     ),
 
-    // title
     h(
       'div',
       {
@@ -140,7 +141,6 @@ export async function GET(req: NextRequest) {
       'دعوة زواج'
     ),
 
-    // line
     h('div', {
       style: {
         position: 'absolute',
@@ -152,7 +152,6 @@ export async function GET(req: NextRequest) {
       },
     }),
 
-    // family invite text
     h(
       'div',
       {
@@ -168,7 +167,6 @@ export async function GET(req: NextRequest) {
       `يتشرف ${familyName} بدعوتكم لحضور حفل زواج`
     ),
 
-    // groom name
     h(
       'div',
       {
@@ -185,7 +183,6 @@ export async function GET(req: NextRequest) {
       groomName
     ),
 
-    // guest label
     h(
       'div',
       {
@@ -201,7 +198,6 @@ export async function GET(req: NextRequest) {
       'الدعوة موجهة إلى'
     ),
 
-    // guest box
     h('div', {
       style: {
         position: 'absolute',
@@ -216,7 +212,6 @@ export async function GET(req: NextRequest) {
       },
     }),
 
-    // guest name
     h(
       'div',
       {
@@ -242,7 +237,6 @@ export async function GET(req: NextRequest) {
       )
     ),
 
-    // event intro
     h(
       'div',
       {
@@ -258,7 +252,6 @@ export async function GET(req: NextRequest) {
       'وذلك بمشيئة الله تعالى'
     ),
 
-    // event details
     h(
       'div',
       {
@@ -292,7 +285,6 @@ export async function GET(req: NextRequest) {
       )
     ),
 
-    // footer
     h(
       'div',
       {
